@@ -30,13 +30,21 @@ namespace PlanEditor
             Connect,
             Edit
         }
-
+        /// <summary>
+        /// Модификатор рабочего поля
+        /// </summary>
         private CanvasMode _mode;
 
         private TransformGroup _transformGroup;
         private TranslateTransform _translation;
         private ScaleTransform _scale;  // увеличение
+        /// <summary>
+        /// Последнее положение по оси X
+        /// </summary>
         private double _lastPosX;
+        /// <summary>
+        /// Последнее положение по оси Y
+        /// </summary>
         private double _lastPosY;
         private Line _line;
         private Entities.Building _building;
@@ -50,12 +58,21 @@ namespace PlanEditor
         private Point _lastClick = new Point(100, 100);
         private Point _curPosMouse;  // позиция мышки
         private RegGrid.Grid _grid;
-        private readonly List<Entity> _selectedItems = new List<Entity>();  // список выделенных элементов
+        /// <summary>
+        /// Список выделенных объектов
+        /// </summary>
+        private readonly List<Entity> _selectedItems = new List<Entity>(); 
+        /// <summary>
+        /// Список непроходимых препятствий
+        /// </summary>
         private readonly List<Obstacle> _obstacles = new List<Obstacle>();
         private readonly List<Line> _lines = new List<Line>();
         private readonly List<Line> _drawGrid = new List<Line>();
         private SimpleGraph Graph = new SimpleGraph();
-        private bool _shiftPressed;  //флаг нажатия клавиши Shift
+        /// <summary>
+        /// Флаг нажатия клавиши Shift
+        /// </summary>
+        private bool _shiftPressed;
         private bool _isChanged;
         private Entity _selectedItem;
 
@@ -73,10 +90,10 @@ namespace PlanEditor
             MenuAdd.IsEnabled = false;
             MenuTools.IsEnabled = false;
 
-            _building = new Building();  // что хранится в этой переменной?
+            _building = new Building();  // инициализация здания
             _grid = new RegGrid.Grid(_building);  // инициализация сетки
 
-            Stage.SetValue(Panel.ZIndexProperty, 100);
+            Stage.SetValue(Panel.ZIndexProperty, 100); 
             _mode = CanvasMode.Select;
 
             ActiveDeactiveFileMenu(false);
@@ -150,7 +167,9 @@ namespace PlanEditor
             }
         }
 
-        // Метод обработки нажатия клавиши Shiht
+        /// <summary>
+        /// Метод обработки нажатия клавиши Shiht
+        /// </summary>
         private void GridField_KeyUp(object sender, KeyEventArgs e)
         {
             if (Key.LeftShift == e.Key) _shiftPressed = false;
@@ -332,6 +351,9 @@ namespace PlanEditor
 
         #region Click events
 
+        /// <summary>
+        /// Метод добавления препятствия
+        /// </summary>
         private void Click_AddObstacle(object sender, RoutedEventArgs e)
         {
             if (_selectedItem == null) return;
@@ -350,7 +372,9 @@ namespace PlanEditor
             }
         }
 
-        // Метод создания нового проекта
+        /// <summary>
+        /// Метод создания нового проекта
+        /// </summary>
         private void Click_New(object sender, RoutedEventArgs e)
         {
             _building.RemoveAll(); // Очистка поля
@@ -371,18 +395,14 @@ namespace PlanEditor
                 ActiveDeactiveFileMenu(false);
             }
         }
-        // Метод, вызывающий функцию сохранения проекта
+        /// <summary>
+        ///  Метод, вызывающий функцию сохранения проекта
+        /// </summary>
         private void Click_Save(object sender, RoutedEventArgs e)
         {
             SaveProject();
         }
-        // ФУНКЦИЯ НЕ ИСПОЛЬЗУЕТСЯ
-        private void Click_EditTool(object sender, RoutedEventArgs e)
-        {
-            _mode = CanvasMode.Edit;
-            ActiveDeactiveMenu(false);
-        }
-        
+
         private void Click_FindTool(object sender, RoutedEventArgs e)
         {
             if (_building == null) return;
@@ -390,105 +410,69 @@ namespace PlanEditor
             var findWin = new FindWindow(_building) { Owner = this };
             findWin.Show();
         }
-        
-        private void Click_ExportToHtml(object sender, RoutedEventArgs e)
-        {
-            var dlg = new SaveFileDialog { DefaultExt = ".html", Filter = "html file (*.html) |*html" };
-            var result = dlg.ShowDialog();
 
-            if (result != true) return;
-
-            //SaveToHtmlData.Save(_building, dlg.FileName);
-
-            //string folder = System.IO.Path.GetDirectoryName(dlg.FileName);
-            //SaveImage.SaveFile(_building, folder);
-        }
-        
-        // Метод прверки проекта перед выгрузкой/загрузкой
+        /// <summary>
+        /// Метод прверки проекта перед выгрузкой/загрузкой
+        /// </summary>
         public bool CheckBeforeExport()
         {
             if (_building == null) return false;
 
             if (!CheckPlacesDoors())
             {
-                MessageBox.Show(this, "Ошибка", "Здание содержит ошибки (не все помещения доступны)");//<!------------------------------
+                MessageBox.Show(this, "Ошибка", "Здание содержит ошибки (не все помещения доступны)");
                 return false;
-            }//*/
+            }
             
             bool isCollide = false;
             foreach (var places in _building.Places)
             {
                 foreach (var place in places)
                 {
-                    if (place.IsCollide)
-                    {
-                        place.Collide();
-                        isCollide = true;
-                    }
+                    if (!place.IsCollide) continue;
+                    place.Collide();
+                    isCollide = true;
                 }
             }
-            if (isCollide)
-            {
-                MessageBox.Show(this, "Ошибка", "Имеются пересекающиеся помещения");//<!------------------------------
-                return false;
-            }
-
-            return true;
+            if (!isCollide) return true;
+            MessageBox.Show(this, "Ошибка", "Имеются пересекающиеся помещения");//<!------------------------------
+            return false;
         }
 
-        // Метод экспортирования данных для FDS
+        /// <summary>
+        /// Метод экспортирования данных для FDS
+        /// </summary>
         private void Click_ExportFDS(object sender, RoutedEventArgs e)
         {
-            //if (CheckBeforeExport())
-            //{
-                var dlg = new SaveFileDialog {DefaultExt = ".json", Filter = "JSON FDS file (*.json) |*json"};
-                var result = dlg.ShowDialog();
+            var dlg = new SaveFileDialog { DefaultExt = ".json", Filter = "JSON FDS file (*.json) |*json" };
+            var result = dlg.ShowDialog();
 
-                if (result == true)
-                {
-                    SaveToFDS.Save(_building, dlg.FileName);
-                    MessageBox.Show(this, "Экспорт готов"); //<!------------------------------
-                }
-            //}
+            if (result != true) return;
+            SaveToFDS.Save(_building, dlg.FileName);
+            MessageBox.Show(this, "Экспорт готов");
+
         }
 
-        // Метод экспортирования данных в .json
+        /// <summary>
+        /// Метод экспортирования данных в .json
+        /// </summary>
         private void Click_Export(object sender, RoutedEventArgs e)
         {
-            if (CheckBeforeExport())
-            {
-                var dlg = new SaveFileDialog {DefaultExt = ".json", Filter = "JSON export evac file (*.json) |*json"};
-                var result = dlg.ShowDialog();
+            if (!CheckBeforeExport()) return;
+            var dlg = new SaveFileDialog {DefaultExt = ".json", Filter = "JSON export evac file (*.json) |*json"};
+            var result = dlg.ShowDialog();
 
-                if (result == true)
-                {
-                    var rg = new RecognizeGrid(_grid, _building);
-                    rg.Recognize();
+            if (result != true) return;
+            var rg = new RecognizeGrid(_grid, _building);
+            rg.Recognize();
 
-                    SaveToEvac.Save(dlg.FileName, rg.Grid, _building);
-                    MessageBox.Show(this, "Экспорт готов"); //<!------------------------------
-                }
-                /*
-                var processInfo = new ProcessStartInfo("java.exe", "-jar app.jar")
-                        {
-                            CreateNoWindow = true,
-                            UseShellExecute = false
-                        };
-                Process proc;
-
-                if ((proc = Process.Start(processInfo)) == null)
-                {
-                    throw new InvalidOperationException("??");
-                }
-
-                proc.WaitForExit();
-                int exitCode = proc.ExitCode;
-                proc.Close();
-                */
-            }
+            SaveToEvac.Save(dlg.FileName, rg.Grid, _building);
+            MessageBox.Show(this, "Экспорт готов");
         }
 
-        // Проверка помещения на наличие дверей.
+        /// <summary>
+        /// Проверка помещения на наличие дверей
+        /// </summary>
         private bool CheckPlacesDoors()
         {
             bool isOK = true;
@@ -546,11 +530,9 @@ namespace PlanEditor
             {
                 foreach (var place in places)
                 {
-                    if (!visited.Contains(place))
-                    {
-                        place.Collide();
-                        isOK = false;
-                    }
+                    if (visited.Contains(place)) continue;
+                    place.Collide();
+                    isOK = false;
                 }
             }
 
@@ -570,8 +552,8 @@ namespace PlanEditor
                     var v = edge.GetOppositeVertex(ver);
                     if (v == null) continue;
 
-                    if (!visited.Contains(v.Place))
-                        newVertices.Add(v);
+                    if (visited.Contains(v.Place)) continue;
+                    newVertices.Add(v);
                 }
             }
 
@@ -580,7 +562,9 @@ namespace PlanEditor
             RecurseCheck(newVertices, visited);
         }
 
-        // Метод открытия файлов
+        /// <summary>
+        /// Метод открытия файлов
+        /// </summary>
         private void Click_Open(object sender, RoutedEventArgs e)
         {
             var dlg = new OpenFileDialog { DefaultExt = ".rintd", Filter = "RINTD Files (*.rintd) |*rintd" };
@@ -656,12 +640,6 @@ namespace PlanEditor
                     ActiveDeactiveFileMenu(false);
                 }
             }
-        }
-
-        private void Click_Path(object sender, RoutedEventArgs e)
-        {
-            _mode = CanvasMode.Path;
-            DeselectAll();
         }
 
         private void Click_SelectTool(object sender, RoutedEventArgs e)

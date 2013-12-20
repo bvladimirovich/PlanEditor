@@ -5,13 +5,15 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using PlanEditor.Helpers;
-using System.Diagnostics;
 
 namespace PlanEditor.Entities
 {
     [Serializable]
     public class Entity
     {
+        /// <summary>
+        /// Сущности: помещение, дверь, лестница, шахта, лифт, препятствие
+        /// </summary>
         public enum EntityType { Place, Portal, Stairway, Halfway, Lift, Obstacle }
         public EntityType Type { get; set; }
 
@@ -64,15 +66,12 @@ namespace PlanEditor.Entities
             {
                 case EntityType.Place:
                     p.Fill = Colours.Indigo;
-                    //p.Fill = Colours.Room;
                     break;
                 case EntityType.Halfway:
-                    //p.Fill = Colours.Halfway;
                     p.Fill = Colours.Green;
                     break;
                 case EntityType.Stairway:
                     p.Fill = Colours.Violet;
-                    //p.Fill = Colours.Stairway;
                     break;
                 case EntityType.Portal:
                     p.Fill = Colours.LightGray;
@@ -143,7 +142,7 @@ namespace PlanEditor.Entities
         {
             get
             {
-                return distance(PointsY[0], PointsY);
+                return distance(PointsY);
             }
         }
 
@@ -151,11 +150,11 @@ namespace PlanEditor.Entities
         {
             get
             {
-                return distance(PointsX[0], PointsX);
+                return distance(PointsX);
             }
         }
 
-        private double distance(double a, List<double> list)
+        private double distance(List<double> list)
         {
             double a1 = list[0];
             double dist = 0;

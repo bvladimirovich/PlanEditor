@@ -13,11 +13,7 @@ namespace PlanEditor.Helpers
         /// <summary>
         /// Метод определяет ближайшую точку 
         /// </summary>
-        /// <param name="a1"></param>
-        /// <param name="a2"></param>
-        /// <param name="b1"></param>
-        /// <param name="b2"></param>
-        /// <returns></returns>
+        /// <returns>True/False</returns>
         public static bool IsNearest(double a1, double a2, double b1, double b2)
         {
             var v1 = Helper.Tan(a1, b1);
@@ -34,9 +30,7 @@ namespace PlanEditor.Helpers
         /// <summary>
         /// Метод определяет соседние комнаты
         /// </summary>
-        /// <param name="place1"></param>
-        /// <param name="place2"></param>
-        /// <returns></returns>
+        /// <returns>True/False</returns>
         public static bool DefineNeighRooms(Place place1, Place place2)
         {
             var mas1 = new[] { double.MaxValue, double.MinValue, double.MaxValue, double.MinValue };

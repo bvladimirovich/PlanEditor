@@ -1,11 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Security.Policy;
-using System.Text;
 using Newtonsoft.Json;
 using PlanEditor.Entities;
 using PlanEditor.EvacStruct;
