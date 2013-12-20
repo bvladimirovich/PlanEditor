@@ -12,6 +12,7 @@ namespace PlanEditor
     public partial class WinRoom : Window
     {
         public Entity Entity { get; private set; }
+        public int FireType { get; private set; }
 
         private readonly Place _place;
         private readonly Building _building;
@@ -65,6 +66,7 @@ namespace PlanEditor
             Leng.Text = TempData.TempRoom.Length;
             Height.Text = TempData.TempRoom.Height;
             EvacWide.Text = TempData.TempRoom.EvacWide;
+            FireType = 0;
         }
 
         private void InitializeCombo()
@@ -481,6 +483,8 @@ namespace PlanEditor
             }
             else
             {
+                CheckFireType();
+
                 var p = new Place
                 {
                     Name = name.Text,
@@ -490,6 +494,7 @@ namespace PlanEditor
                     SubType = subType.SelectedIndex,
                     UI = CreateNew(w, l),
                     EvacWide = double.Parse(EvacWide.Text),
+                    FireType = FireType
                 };
 
                 if (type.SelectedIndex == 6 && subType.SelectedIndex == 10)
@@ -503,7 +508,7 @@ namespace PlanEditor
                 }
                 Entity = p;
 
-                CheckFireType();
+                
             }
         }
       
@@ -589,15 +594,18 @@ namespace PlanEditor
         {
             if (IsFire.IsChecked.HasValue && IsFire.IsChecked.Value)
             {
-                _place.FireType = 1;
+                if (_place != null) _place.FireType = 1;
+                FireType = 1;
             }
             else if (IsBlocked.IsChecked.HasValue && IsBlocked.IsChecked.Value)
             {
-                _place.FireType = 2;
+                if (_place != null) _place.FireType = 2;
+                FireType = 2;
             }
             else
             {
-                _place.FireType = 0;
+                if (_place != null) _place.FireType = 0;
+                FireType = 0;
             }
         }
     }
