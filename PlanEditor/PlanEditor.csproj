@@ -87,6 +87,7 @@
     <Compile Include="Helpers\IO\SaveQR.cs" />
     <Compile Include="Helpers\IO\SaveToHtmlData.cs" />
     <Compile Include="Helpers\PELogger.cs" />
+    <Compile Include="MyMath\MyMath.cs" />
     <Compile Include="TempData\TempDoor.cs" />
     <Compile Include="TempData\TempRoom.cs" />
     <Compile Include="WinBuilding.xaml.cs">
@@ -151,7 +152,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Math\MyMath.cs" />
     <Compile Include="Entities\Place.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
