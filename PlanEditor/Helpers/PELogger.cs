@@ -4,6 +4,9 @@ using System.Runtime.CompilerServices;
 
 namespace PlanEditor.Helpers
 {
+    /// <summary>
+    /// Класс обработки ошибок
+    /// </summary>
     public class PELogger
     {
         private static PELog _logger;
@@ -22,7 +25,9 @@ namespace PlanEditor.Helpers
             }
         }
     }
-
+    /// <summary>
+    /// Класс инициализаци и записи ошибок
+    /// </summary>
     public class PELog
     {
         private StreamWriter File { get; set; }
