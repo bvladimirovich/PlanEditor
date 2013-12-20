@@ -23,24 +23,42 @@ namespace PlanEditor.MyMath
             return c;
         }
 
-        // Перевод метров в пиксели
+        /// <summary>
+        /// Метод перевода метров в пиксели
+        /// </summary>
+        /// <param name="meters">Расстояние в метрах</param>
+        /// <returns>Количество писклелей</returns>
         public static double MetersToPxl(double meters)
         {
             return meters/Constants.Sigma;
         }
 
-        // Что здесь считается. Тангенс? для чего это значение?
+        /// <summary>
+        /// Метод опеределения расстояния между точками
+        /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        /// <returns></returns>
         public static double Tan(double x1, double y1, double x2, double y2)
         {
             return Math.Sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
         }
-        // Переопределенный метод Tan, для двух чисел.
-        // Почему только для иксов?
+        /// <summary>
+        /// Метод опеределения расстояния между точками
+        /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="x2"></param>
+        /// <returns></returns>
         public static double Tan(double x1, double x2)
         {
             return Math.Sqrt((x1 - x2) * (x1 - x2));
         }
-        // Определение горизонтальности. Горизонтальности чего?
+        /// <summary>
+        /// Метод определения горизонтальности
+        /// </summary>
+        /// <returns>True/False</returns>
         public static bool IsHorizontal(double x1, double y1, double x2, double y2)
         {
             double x = Helper.Tan(x1, x2);
