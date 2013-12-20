@@ -2109,7 +2109,7 @@ namespace PlanEditor
             MIExport.IsEnabled = isEnabled;
             MIExportFDS.IsEnabled = isEnabled;
             MIEdit.IsEnabled = isEnabled;
-            MITable.IsEnabled = isEnabled;
+            //MITable.IsEnabled = isEnabled;
         }
 
         // Проверка выделенного объета
